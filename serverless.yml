@@ -1,0 +1,123 @@
+app: sample-service
+service: sample-service
+frameworkVersion: "3"
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  architecture: x86_64
+  stage: dev
+  region: us-east-1
+  memorySize: 512
+  timeout: 30
+  stackName: sample-service
+  deploymentMethod: changesets
+  
+  # Access local database
+  environment:
+    NODE_ENV: ${env:NODE_ENV}
+    DB_HOST: ${env:DB_HOST}
+    DB_USER: ${env:DB_USER}
+    DB_PASSWORD: ${env:DB_PASSWORD}
+    DB_NAME: ${env:DB_NAME}
+    DB_PORT: ${env:DB_PORT}
+  # End of local database environment
+
+  httpApi:
+    cors: true
+  # attach policies to the service. e.g:
+  # iam:
+  #   role:
+  #     statements:
+  #     - Effect: Allow
+  #       Action:
+  #       - "dynamodb:*"
+  #       Resource: "*"
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-dotenv-plugin
+  - serverless-offline
+
+custom:
+  esbuild:
+    watch:
+      pattern: src/**/*.ts
+
+#
+# Existing functions
+#
+
+functions:
+  createUser:
+    handler: src/handlers/user/create.handler
+    events:
+      - http:
+          path: /api/v1/users
+          method: post
+  findAllUser:
+    handler: src/handlers/user/findAll.handler
+    events:
+      - http:
+          path: /api/v1/users
+          method: get
+  findOneUser:
+    handler: src/handlers/user/findOne.handler
+    events:
+      - http:
+          path: /api/v1/users/{userId}
+          method: get
+  updateUser:
+    handler: src/handlers/user/update.handler
+    events:
+      - http:
+          path: /api/v1/users/{userId}
+          method: patch
+  deleteUser:
+    handler: src/handlers/user/delete.handler
+    events:
+      - http:
+          path: /api/v1/users/{userId}
+          method: delete
+#
+# END Of Existing functions
+#
+
+# Start TODO APIs
+  createTodo:
+    handler: src/handlers/todo/create.handler
+    events:
+      - http:
+          path: /api/v1/todos
+          method: post
+  findAllTodo:
+    handler: src/handlers/todo/findAll.handler
+    events:
+      - http:
+          path: /api/v1/todos
+          method: get
+  findOneTodo:
+    handler: src/handlers/todo/findOne.handler
+    events:
+      - http:
+          path: /api/v1/todos/{todoId}
+          method: get
+  updateTodo:
+    handler: src/handlers/todo/update.handler
+    events:
+      - http:
+          path: /api/v1/todos/{todoId}
+          method: patch
+  deleteTodo:
+    handler: src/handlers/todo/delete.handler
+    events:
+      - http:
+          path: /api/v1/todos/{todoId}
+          method: delete
+  clearAllTodo:
+    handler: src/handlers/todo/clearall.handler
+    events:
+      - http:
+          path: /api/v1/todos/clear
+          method: post
