@@ -8,7 +8,7 @@ A serverless typescript service template built on [scaffold.js](https://www.npmj
 ## 1. Clone repo
 
 ```bash
-npx degit https://github.com/ebukaodini/serverless-typescript-service-template.git sample-service
+git clone git@github.com:Bablobeto/severless_sample_project.git
 ```
 
 ## 2. Install packages
